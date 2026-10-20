@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>+1 Karate Evolution Script — Auto-Farm, Instant Belts &amp; Infinite Yen</title>
+<meta name="description" content="Karate Evolution script: +1 stat auto-farm, instant belt upgrade, infinite yen loop, anti-AFK teleport farm — loadstring executor-ready for Windows 10 / 11.">
+<style>
+  :root{
+    --bg-deep:#070b1a;
+    --bg-indigo:#111a3d;
+    --bg-charcoal:#0e1220;
+    --surface:rgba(255,255,255,.045);
+    --surface-strong:rgba(255,255,255,.075);
+    --border:rgba(140,160,255,.16);
+    --border-bright:rgba(150,170,255,.34);
+    --text:#eef1ff;
+    --muted:#a3aecf;
+    --accent:#6d8bff;
+    --accent-2:#a56bff;
+    --accent-3:#3ee0d0;
+    --radius:18px;
+    --maxw:1120px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,"Inter",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(1100px 700px at 12% -10%, rgba(109,139,255,.28), transparent 62%),
+      radial-gradient(900px 620px at 92% 4%, rgba(165,107,255,.22), transparent 60%),
+      radial-gradient(1000px 800px at 50% 110%, rgba(62,224,208,.12), transparent 65%),
+      linear-gradient(168deg, var(--bg-deep) 0%, var(--bg-indigo) 42%, var(--bg-charcoal) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;text-decoration:none}
+
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---------- NAV ---------- */
+  .nav-shell{
+    position:sticky;top:0;z-index:100;
+    padding:14px 0;
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    background:rgba(9,13,30,.55);
+    border-bottom:1px solid var(--border);
+  }
+
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+  }
+
+  .brand{
+    display:flex;align-items:center;gap:11px;
+    font-weight:800;letter-spacing:-.02em;font-size:1.02rem;
+    white-space:nowrap;
+  }
+
+  .brand-mark{
+    width:34px;height:34px;flex:0 0 34px;
+    display:grid;place-items:center;
+    border-radius:11px;
+    font-size:.95rem;
+    background:linear-gradient(140deg,var(--accent),var(--accent-2));
+    box-shadow:0 6px 20px -6px rgba(109,139,255,.85), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+
+  .brand-text{background:linear-gradient(92deg,#fff,#bcc8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .nav-links{
+    display:flex;align-items:center;gap:26px;
+    font-size:.9rem;font-weight:500;color:var(--muted);
+  }
+
+  .nav-links a{position:relative;transition:color .2s ease}
+  .nav-links a:hover{color:#fff}
+  .nav-links a::after{
+    content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;
+    background:linear-gradient(90deg,var(--accent),var(--accent-3));
+    border-radius:2px;transition:width .25s ease;
+  }
+  .nav-links a:hover::after{width:100%}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-weight:700;font-size:.92rem;
+    padding:12px 22px;border-radius:12px;
+    border:1px solid transparent;cursor:pointer;
+    transition:transform .18s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+    white-space:nowrap;
+  }
+
+  .btn-primary{
+    color:#0a0f22;
+    background:linear-gradient(135deg,#8fa6ff 0%,#a97bff 55%,#5fe6d6 100%);
+    box-shadow:0 12px 32px -12px rgba(120,140,255,.9), inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 42px -12px rgba(140,150,255,1), inset 0 1px 0 rgba(255,255,255,.6)}
+
+  .btn-ghost{
+    color:var(--text);
+    background:rgba(255,255,255,.05);
+    border-color:var(--border-bright);
+    backdrop-filter:blur(8px);
+  }
+  .btn-ghost:hover{transform:translateY(-2px);background:rgba(255,255,255,.1);border-color:rgba(160,180,255,.6)}
+
+  .nav .btn{padding:10px 18px;font-size:.86rem}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:88px 0 72px;text-align:center;position:relative}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:9px;
+    padding:8px 16px;border-radius:999px;
+    font-size:.78rem;font-weight:600;letter-spacing:.04em;
+    text-transform:uppercase;color:#cfd8ff;
+    background:rgba(109,139,255,.12);
+    border:1px solid var(--border-bright);
+    box-shadow:0 0 0 4px rgba(109,139,255,.05);
+  }
+  .pill-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--accent-3);
+    box-shadow:0 0 10px var(--accent-3);
+    animation:pulse 2.1s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+
+  h1{
+    margin:26px auto 0;
+    max-width:900px;
+    font-size:clamp(2.1rem,5.4vw,4rem);
+    line-height:1.08;
+    letter-spacing:-.035em;
+    font-weight:800;
+    background:linear-gradient(100deg,#ffffff 0%,#b9c6ff 34%,#c39dff 62%,#7ef0e2 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .hero p.lede{
+    margin:22px auto 0;
+    max-width:640px;
+    font-size:1.04rem;
+    color:var(--muted);
+  }
+
+  .hero-actions{
+    margin-top:34px;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  }
+  .hero-actions .btn{padding:15px 30px;font-size:.98rem;border-radius:14px}
+
+  .chips{
+    margin-top:44px;
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  }
+
+  .chip{
+    display:flex;align-items:center;gap:9px;
+    padding:10px 16px;border-radius:12px;
+    font-size:.82rem;font-weight:600;color:#d6ddfa;
+    background:var(--surface);
+    border:1px solid var(--border);
+    backdrop-filter:blur(8px);
+  }
+  .chip span.k{color:#8e9bc4;font-weight:500}
+  .chip em{font-style:normal;color:var(--accent-3)}
+
+  /* ---------- SECTION HEADINGS ---------- */
+  section{padding:74px 0}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 48px}
+  .sec-tag{
+    display:inline-block;font-size:.74rem;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:#9fb0ff;margin-bottom:14px;
+  }
+  h2{
+    font-size:clamp(1.6rem,3.4vw,2.4rem);
+    letter-spacing:-.03em;line-height:1.15;font-weight:800;
+    background:linear-gradient(100deg,#fff,#bcc8ff 70%,#9be9ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sec-head p{margin-top:14px;color:var(--muted);font-size:.98rem}
+
+  /* ---------- FEATURES ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+
+  .card{
+    position:relative;
+    padding:28px 24px 26px;
+    border-radius:var(--radius);
+    background:linear-gradient(170deg,rgba(255,255,255,.065),rgba(255,255,255,.02));
+    border:1px solid var(--border);
+    backdrop-filter:blur(12px);
+    overflow:hidden;
+    transition:transform .28s cubic-bezier(.2,.7,.3,1), box-shadow .28s ease, border-color .28s ease;
+  }
+
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
+    opacity:.85;
+  }
+
+  .card:hover{
+    transform:translateY(-7px);
+    border-color:var(--border-bright);
+    box-shadow:0 26px 50px -22px rgba(80,110,255,.7);
+  }
+
+  .card .ico{
+    width:46px;height:46px;display:grid;place-items:center;
+    font-size:1.35rem;border-radius:13px;
+    background:rgba(109,139,255,.14);
+    border:1px solid rgba(140,160,255,.24);
+    margin-bottom:18px;
+  }
+
+  .card h3{
+    font-size:1.03rem;font-weight:700;letter-spacing:-.01em;margin-bottom:9px;color:#fff;
+  }
+
+  .card p{font-size:.9rem;color:var(--muted);line-height:1.62}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{
+    position:relative;
+    max-width:760px;margin:0 auto;
+    padding-left:64px;
+  }
+
+  .steps::before{
+    content:"";position:absolute;left:23px;top:14px;bottom:14px;width:2px;
+    background:linear-gradient(180deg,var(--accent),var(--accent-2) 50%,var(--accent-3));
+    border-radius:2px;
+    opacity:.75;
+  }
+
+  .step{position:relative;padding:0 0 40px 0}
+  .step:last-child{padding-bottom:0}
+
+  .step-num{
+    position:absolute;left:-64px;top:0;
+    width:48px;height:48px;border-radius:14px;
+    display:grid;place-items:center;
+    font-weight:800;font-size:1.02rem;color:#0a0f22;
+    background:linear-gradient(140deg,#9fb2ff,#b98dff);
+    box-shadow:0 10px 26px -10px rgba(120,140,255,.95), inset 0 1px 0 rgba(255,255,255,.5);
+  }
+
+  .step h3{font-size:1.06rem;font-weight:700;margin-bottom:7px;color:#fff}
+  .step p{font-size:.92rem;color:var(--muted);max-width:560px}
+  .step code{
+    font-family:ui-monospace,Consolas,"Courier New",monospace;
+    font-size:.84em;color:#a8ffe9;
+    background:rgba(62,224,208,.1);
+    border:1px solid rgba(62,224,208,.22);
+    padding:2px 7px;border-radius:6px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+  details{
+    border-radius:14px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    backdrop-filter:blur(10px);
+    overflow:hidden;
+    transition:border-color .25s ease, background .25s ease;
+  }
+  details[open]{border-color:var(--border-bright);background:var(--surface-strong)}
+
+  summary{
+    list-style:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+    padding:19px 22px;
+    font-weight:600;font-size:.97rem;color:#e9edff;
+    user-select:none;
+  }
+  summary::-webkit-details-marker{display:none}
+
+  .plus{
+    flex:0 0 26px;width:26px;height:26px;
+    display:grid;place-items:center;
+    border-radius:8px;
+    font-size:1.05rem;font-weight:400;line-height:1;
+    color:#b9c6ff;
+    background:rgba(109,139,255,.14);
+    border:1px solid rgba(140,160,255,.26);
+    transition:transform .28s ease, color .28s ease, background .28s ease;
+  }
+  details[open] .plus{
+    transform:rotate(45deg);
+    color:#8affe8;
+    background:rgba(62,224,208,.14);
+    border-color:rgba(62,224,208,.3);
+  }
+
+  .faq-body{
+    padding:0 22px 20px;
+    font-size:.9rem;color:var(--muted);line-height:1.68;
+    max-width:640px;
+  }
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-banner{
+    position:relative;
+    border-radius:26px;
+    padding:64px 32px;
+    text-align:center;
+    overflow:hidden;
+    border:1px solid var(--border-bright);
+    background:linear-gradient(160deg,rgba(109,139,255,.18),rgba(165,107,255,.1) 50%,rgba(62,224,208,.08));
+    backdrop-filter:blur(14px);
+    box-shadow:0 34px 70px -34px rgba(70,100,255,.8);
+  }
+
+  .cta-banner::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(560px 240px at 50% 0%, rgba(150,170,255,.4), transparent 70%);
+    pointer-events:none;
+  }
+
+  .cta-banner h2{position:relative;font-size:clamp(1.5rem,3.6vw,2.3rem)}
+  .cta-banner p{
+    position:relative;margin:16px auto 0;max-width:520px;
+    color:#c3ccef;font-size:.97rem;
+  }
+  .cta-banner .hero-actions{position:relative;margin-top:30px}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:70px;
+    border-top:1px solid var(--border);
+    padding:32px 0 42px;
+    background:rgba(6,9,22,.5);
+    backdrop-filter:blur(10px);
+  }
+  .foot{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-size:.85rem;color:var(--muted);
+  }
+  .foot a{color:#bfcaff;font-weight:600;transition:color .2s}
+  .foot a:hover{color:#fff}
+  .foot-links{display:flex;gap:22px;flex-wrap:wrap}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+  @media (max-width:640px){
+    .nav-links{display:none}
+    .nav-shell{padding:11px 0}
+    .brand{font-size:.92rem}
+    .brand-mark{width:30px;height:30px;flex-basis:30px;font-size:.85rem}
+    .nav .btn{padding:9px 14px;font-size:.8rem}
+
+    .hero{padding:58px 0 48px}
+    h1{font-size:2.05rem}
+    .hero p.lede{font-size:.95rem}
+    .hero-actions{flex-direction:column;align-items:stretch}
+    .hero-actions .btn{width:100%}
+
+    .grid{grid-template-columns:1fr;gap:16px}
+    section{padding:54px 0}
+
+    .steps{padding-left:54px}
+    .step-num{left:-54px;width:42px;height:42px;border-radius:12px;font-size:.92rem}
+    .steps::before{left:20px}
+
+    .chips{gap:9px}
+    .chip{font-size:.76rem;padding:9px 13px}
+
+    .cta-banner{padding:44px 20px;border-radius:20px}
+    .foot{flex-direction:column;align-items:flex-start;text-align:left}
+    .foot-links{gap:16px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<div class="nav-shell">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#top">
+        <span class="brand-mark">🥋</span>
+        <span class="brand-text">Karate&nbsp;Evolution&nbsp;Script</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="btn btn-primary" href="https://gitscore.cc">Download</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="pill"><span class="pill-dot"></span>+1 Karate Evolution Script</span>
+
+    <h1>Automate Your Dojo. Master Every Belt in Minutes.</h1>
+
+    <p class="lede">
+      A loadstring-ready Karate Evolution script for Windows executors — +1 stat auto-farm,
+      instant belt upgrade, an infinite yen loop, and anti-AFK teleport farming that keeps
+      your progress running while you're away.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://gitscore.cc">⬇ Download for Windows</a>
+      <a class="btn btn-ghost" href="https://gitscore.cc">GitHub Repository</a>
+    </div>
+
+    <div class="chips">
+      <div class="chip">⬇ <span class="k">Downloads</span> <em>48,200+</em></div>
+      <div class="chip">🏷 <span class="k">Version</span> <em>v3.4.1</em></div>
+      <div class="chip">🪟 <span class="k">Windows 10 / 11</span></div>
+      <div class="chip">✓ <span class="k">Free &amp; open source</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= FEATURES ================= -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">Features</span>
+      <h2>Everything the grind asks for — on autopilot</h2>
+      <p>Six core modules built into one lightweight loadstring. No extra dependencies, no bloat.</p>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <div class="ico">⚡</div>
+        <h3>+1 Stat Auto-Farm</h3>
+        <p>Continuously allocates single stat points at a tuned interval, so your power curve climbs steadily without manual clicking or input spam.</p>
+      </article>
+
+      <article class="card">
+        <div class="ico">🥋</div>
+        <h3>Instant Belt Upgrade</h3>
+        <p>Skips the training loop and pushes belt progression forward in one pass — from white belt upward, with a configurable target rank.</p>
+      </article>
+
+      <article class="card">
+        <div class="ico">💰</div>
+        <h3>Infinite Yen Loop</h3>
+        <p>A repeating yen farm cycle that keeps your wallet topped up so you can buy upgrades, gear and training boosts without downtime.</p>
+      </article>
+
+      <article class="card">
+        <div class="ico">🛰</div>
+        <h3>Anti-AFK Teleport Farm</h3>
+        <p>Detects idle-kick thresholds and teleports between farm nodes to keep your session alive and your grind uninterrupted overnight.</p>
+      </article>
+
+      <article class="card">
+        <div class="ico">🧩</div>
+        <h3>Loadstring Executor-Ready</h3>
+        <p>One-line <code>loadstring</code> injection that works with popular Windows executors. No file drops, no manual patching, no setup wizard.</p>
+      </article>
+
+      <article class="card">
+        <div class="ico">🛡</div>
+        <h3>Lightweight &amp; Toggleable</h3>
+        <p>Every module has its own on/off switch in a compact GUI. Run only what you need — the script stays low-impact on frame rate.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">How it works</span>
+      <h2>Three steps from download to auto-farm</h2>
+      <p>No config files, no installers. Just an executor and the loadstring.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Download &amp; open your executor</h3>
+        <p>Grab the script from the download button and launch any supported Windows executor for Roblox. The package is a single readable Lua file.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Paste the loadstring</h3>
+        <p>Copy the ready-made <code>loadstring(game:HttpGet(...))()</code> line from the repo and paste it into the executor's script box.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Toggle and farm</h3>
+        <p>Hit execute, open the in-game panel, and enable +1 stat auto-farm, belt upgrade, yen loop and anti-AFK teleport. Walk away — it keeps going.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tag">FAQ</span>
+      <h2>Questions before you execute</h2>
+      <p>Short answers to the things people ask most about the Karate Evolution script.</p>
+    </div>
+
+    <div class="faq">
+      <details>
+        <summary>Which executors does the Karate Evolution script support?<span class="plus">+</span></summary>
+        <div class="faq-body">
+          Any modern Windows executor that supports <code>loadstring</code>, <code>game:HttpGet</code> and standard GUI libraries will run it. It is tested on Windows 10 and Windows 11 with the current executor builds.
+        </div>
+      </details>
+
+      <details>
+        <summary>Does the +1 stat auto-farm work while I'm AFK?<span class="plus">+</span></summary>
+        <div class="faq-body">
+          Yes. The anti-AFK teleport module rotates you between farm nodes before the idle timer triggers, so the +1 stat loop and yen loop keep running in the
